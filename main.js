@@ -77,14 +77,43 @@ function check() {
 //Варианты записи функций:
 
 //function expression. --могут быть вызваны до того как были созданы--
-const sum = (function (a, b) {
+const sum = function (a, b) {
 	return a + b
-})
+}
 
 //стрелочная функция
 const summ = (a, b) => {
 	return a + b
 }
-const summ2 = (a, b) => a + b //если тело фукции состоит из 1 строчки
+
+
 
 //scope - область видимости
+
+//Переменные, объявленные внутри функции, имеют локальную область 
+//видимости и доступны только в пределах этой функции
+// Когда функция возвращает значение, оно может быть записано в глобальную область видимости
+//Глобальная область видимости содержит все глобальные переменные, функции и объекты
+
+
+//проект цензор
+function censor() {
+	const args = []
+
+	return function (arg1, arg2 = '') {
+		let resultStr = arg1
+		if (arg2) {
+			args.push([arg1, arg2])
+		} else {
+			for (let item of args) {
+				resultStr = resultStr.replace(new RegExp(item[0], 'gi'), item[1])
+			}
+			return resultStr
+		}
+	}
+}
+
+const changeScene = censor()
+console.log('PHP', 'JS')
+changeScene('PHP', 'JS')
+console.log(changeScene('PHP is good'))
