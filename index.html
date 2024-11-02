@@ -6,12 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>js-course</title>
     <script src="main.js"></script>
-
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5968/5968292.png" type="image/x-icon">
+    
     <style>
         body {
             font-family: Verdana, Geneva, Tahoma, sans-serif;
-
-
         }
 
         button {
@@ -20,13 +19,37 @@
             padding: 4px 10px;
             border: none;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover{
+            transform: scale(1.1);
+        }
+        section{
+            margin-bottom: 100px;
+        }
+        .shop{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            .product{
+                background-color: rgb(238, 250, 255);
+                padding: 40px;
+                border-radius: 30px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                transition: all 0.3s ease;
+            }
+            .product:hover{
+                transform: scale(1.1);
+            }
         }
     </style>
 </head>
 
-<body class="guessNum" style="max-width: 1300px; margin: auto;">
+<body class="guessNum" style="max-width: 1300px; margin: auto; padding: 0px 40px;">
 
-    <section style="margin-bottom: 90px;">
+    <section>
         <h1>
             Угадай число
         </h1>
@@ -43,7 +66,7 @@
         <button onclick=guessNum(10)>10</button>
     </section>
 
-    <section>   
+    <section>
         <h1>Угадай загадку</h1>
         <p id="riddle"></p>
         <p><small>Дается 3 попытки.</small></p>
@@ -51,6 +74,33 @@
             <input placeholder="ответ" autofocus>
             <button onclick="check()">Проверить</button>
         </div>
+    </section>
+
+    <section>
+        <div class="shop">
+            <div class="product">
+                <h2>Lenovo Yoga</h2>
+                <p>Price: <span class="price">3000</span></p>
+                <button onclick="addToBasket(1)">Buy</button>
+            </div>
+            <div class="product">
+                <h2>Acer Aspire</h2>
+                <p>Price: <span class="price">1800</span></p>
+                <button onclick="addToBasket(2)">Buy</button>
+            </div>
+            <div class="product">
+                <h2>Dell Vostro</h2>
+                <p>Price: <span class="price">3400</span></p>
+                <button onclick="addToBasket(3)">Buy</button>
+            </div>
+        </div>
+        <hr>
+        <div class="basket">
+            <h2 style="text-align: center;">Cart</h2>
+            <ul id="basket-items"></ul>
+            <h3 style="text-align: center;">Total price: <span id="total">0</span></h3>
+        </div>
+
     </section>
 
 </body>
