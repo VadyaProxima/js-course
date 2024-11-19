@@ -124,8 +124,16 @@ function repeater(char) {
 }
 console.log(repeater('zxc'))
 
-//замыкания (функции, которые возвращаются из других функций)
-const addByX = a => b => a + b
+//замыкания ( функция, которая имеет доступ к переменной своей внешней функции даже после того, как эта внешняя функция завершила выполнение)
+const createCounter = () => {
+	let count = 0
+
+	return () => {
+		count += 1
+		return count
+	}
+}
+const counterInc = createCounter()
 
 //проект цензор
 function censor() {
@@ -149,7 +157,7 @@ console.log('PHP', 'JS')
 changeScene('PHP', 'JS')
 console.log(changeScene('PHP is good'))
 
-// map (в отличии от forEach возвращает новый массив с таким же кол-ом элементов, оставляя оригинальный)
+// map
 
 const developers = [
 	{
@@ -414,3 +422,408 @@ function renderCart() {
 		cart.appendChild(el)
 	})
 }
+
+//DOM
+
+//получение ссылок на элементы
+
+const title = document.querySelector('h1')
+const btn = document.querySelector('#btn') //по индетификатору
+const subtitle = document.querySelector('.title.gray') //по class
+const section = document.querySelectorAll('section')
+
+const btn2 = document.getElementById('btn')
+const subtitle2 = document.getElementsByClassName('title gray') //<section>  <h2 class="title">Third section</h2>  </section>
+const sections2 = document.querySelectorAll('section')
+
+//toggle visibility
+
+const btnVis = document.getElementById('toggle-btn')
+const div = document.querySelector('.element')
+
+function toggleDivVisibility() {
+	div.classList.toggle('hide')
+}
+
+btnVis.addEventListener('click', toggleDivVisibility)
+
+let accordions = document.querySelectorAll('.accordion')
+accordions.forEach(accordion => accordion.addEventListener('click', toggle))
+function toggle() {
+	this.nextElementSibling.classList.toggle('show')
+}
+
+const btns = document.querySelectorAll('[data-clicked]')
+
+btns.forEach(btn => btn.addEventListener('click', addClick))
+function addClick(event) {
+	event.target.dataset.clicked++
+}
+
+const btnListner = document.querySelector('button')
+btnListner.addEventListener('click', handleEvent)
+function handleEvent(event) {
+	console.log(event)
+}
+
+//todo-list (local storage practice)
+
+const list = document.getElementById('todos')
+document.querySelector('.add-task').addEventListener('click', handleClick)
+document.addEventListener('DOMContentLoaded', loadTodos)
+
+function handleClick() {
+	const newTodo = this.previousElementSibling.value.trim()
+
+	if (newTodo) {
+		createTodo(newTodo)
+		saveToStorage(newTodo)
+		this.previousElementSibling.value = ''
+	} else {
+		alert('input field is empty ')
+	}
+}
+
+function saveToStorage(todo) {
+	const todos = JSON.parse(localStorage.getItem('tasks')) || []
+
+	localStorage.setItem('tasks', JSON.stringify([...todos, todo]))
+}
+
+function loadTodos() {
+	const todos = JSON.parse(localStorage.getItem('tasks'))
+
+	if (todos) {
+		todos.forEach(todo => createTodo(todo))
+	}
+}
+
+function createTodo(text) {
+	const li = document.createElement('li')
+	li.innerText = text
+	li.className = 'todo-item'
+	li.addEventListener('click', removeTodo)
+
+	list.appendChild(li)
+}
+
+function removeTodo() {
+	this.removeEventListener('click', removeTodo)
+	this.remove()
+	removeLocalStorage(this.innerText)
+}
+function removeLocalStorage(todo) {
+	const todos = JSON.parse(localStorage.getItem('tasks')).filter(
+		obj => obj !== todo
+	)
+	localStorage.setItem('tasks', JSON.stringify(todos))
+}
+
+//модальное окно
+
+document.querySelector('#myBtn').addEventListener('click', toggleSpoiler)
+
+function toggleSpoiler() {
+	const spoiler = document.querySelector('#spoiler')
+	spoiler.classList.toggle('closed')
+
+	if (spoiler.classList.contains('closed')) {
+		dettachSpoilerEvents()
+	} else {
+		attachSpoilerEvents()
+	}
+}
+function dettachSpoilerEvents() {
+	document.removeEventListener('keydown', handleEscape)
+}
+function attachSpoilerEvents() {
+	document.addEventListener('keydown', handleEscape)
+}
+function handleEscape(e) {
+	if (e.key === 'Escape') toggleSpoiler()
+}
+
+// ООП
+
+// создание классов
+class Player {
+	static totalPlayers = 0 // статическое свойство
+	#score // приватное свойство
+
+	constructor(login, firstName, lastName, score = 100) {
+		this.firstName = firstName
+		this.lastName = lastName
+		this.login = login
+		this.#score = score
+		Player.totalPlayers++
+	}
+
+	get fullName() {
+		return this.firstName + ' ' + this.lastName
+	}
+
+	set fullName(name) {
+		const [f, l] = name.split(' ')
+		this.firstName = f
+		this.lastName = l
+	}
+
+	get score() {
+		return this.#score
+	}
+
+	incrementScore(num = 10) {
+		this.#score += num // изменяем приватное свойство
+	}
+
+	decrementScore(num = 10) {
+		this.#score -= num // изменяем приватное свойство
+	}
+
+	static create(login) {
+		return new Player(login, 234) //статический метод
+	}
+
+	static sortByScore(a, b) {
+		return a.score - b.score
+	}
+}
+
+const player1 = new Player('Vanya')
+const player2 = new Player('Edik', 200)
+player1.incrementScore()
+console.log(player1, player1.score)
+
+const p1 = Player.create
+
+const p2 = new Player('z', 'Vadya', 'Proxima')
+console.log(p2.fullName)
+p2.lastName = 'Levi'
+console.log(p2.fullName)
+p2.fullName = 'Stas Ubica'
+console.log(p2)
+
+//наследование классов
+class CasinoEnjoyers extends Player {
+	static totalPlayers = 0 //статические свойства. totalPlayers - частный случай для CasinoEnjoyers
+
+	constructor(login, score = 100, balance = 1000) {
+		super(login, score)
+		this.balance = balance
+		CasinoEnjoyers.totalPlayers++
+	}
+	incrBalance(dep = 10) {
+		this.balance += dep
+	}
+
+	static create(login) {
+		return new CasinoEnjoyers(login, 234, 23123) //статический метод
+	}
+}
+const pp1 = new CasinoEnjoyers('ludik', 10, 200)
+pp1.incrBalance()
+console.log(pp1)
+
+console.log(Player.totalPlayers)
+
+const playersArr = []
+playersArr[0] = new Player('tom', 20)
+playersArr[1] = new Player('otm', 201)
+playersArr[2] = new Player('mot', 10)
+playersArr[3] = new Player('tmo', 5)
+playersArr[4] = new CasinoEnjoyers('vlad', 123, 20)
+playersArr[4] = new CasinoEnjoyers('stas', 103, 200)
+
+console.log(playersArr.sort(Player.sortByScore))
+
+//паттерны проектирования
+
+//порождающие
+//singleton - порождающий паттерн, у класса есть только 1 экземпляр и предоставляет к нему глобальную точку доступа
+//создаем пользователя и админа, админ может быть только один
+
+class User {
+	constructor(login, email) {
+		this.login = login
+		this.email = email
+		this.role = 'user'
+	}
+}
+
+class Admin extends User {
+	static instance = null
+
+	constructor(login, email) {
+		if (Admin.instance) {
+			return Admin.instance // принято возвращать существующий экземпляр
+		}
+
+		super(login, email)
+		this.role = 'admin'
+		Admin.instance = this
+	}
+}
+
+//фабричный
+class UserCreator {
+	static userList = {
+		user: User,
+		admin: Admin,
+	}
+
+	static create(login, email, role = 'user') {
+		const UserType = UserCreator.userList[role] || UserCreator.userList['user'] // Default to User
+		const instance = new UserType(login, email)
+		instance.role = role
+		return instance
+	}
+}
+
+const user1 = UserCreator.create('User1', 'user1@mail.com')
+const admin1 = UserCreator.create('Admin1', 'admin1@mail.com', 'admin')
+console.log(user1, admin1)
+
+//структурные
+
+// адаптер
+
+class UserCreator2 {
+	static userList = {
+		user: User,
+		publisher: Admin, //поменялось название админа
+	}
+
+	static createUser(login, email, role = 'user') {
+		//поменялось название функции/библиотеки/чего угодно
+		const UserType =
+			UserCreator2.userList[role] || UserCreator2.userList['user']
+		const instance = new UserType(login, email)
+		instance.role = role
+		return instance
+	}
+}
+//адаптируемся под изменения
+class UserAdapter {
+	static userList = {
+		user: 'user',
+		admin: 'publisher',
+	}
+
+	static create(login, email, role = 'user') {
+		const mappedRole = UserAdapter.userList[role] || 'user'
+		return UserCreator2.createUser(login, email, mappedRole)
+	}
+}
+
+const user3 = UserAdapter.create('User3', 'user3@mail.com', 'admin')
+console.log(user3)
+
+//фасад - предоставляет простой интерфейс к сложной система классов, библиотеки, фреймворку
+
+class Order {
+	constructor(order) {
+		this.order = order
+		this.status = 'received'
+
+		KitchenTask.createTask(this)
+	}
+}
+
+class KitchenTask {
+	constructor(task) {
+		this.task = task.order
+		this.statu = 'preparing'
+	}
+
+	static createTask(task) {
+		const kTask = new KitchenTask(task)
+
+		setTimeout(() => {
+			DeliveryTask.createTask(kTask)
+		}, 3000)
+	}
+}
+
+class DeliveryTask {
+	constructor(task) {
+		this.task = task.task
+		this.status = 'in delivery'
+	}
+
+	static createTask(task) {
+		const dTask = new DeliveryTask(task)
+
+		setTimeout(() => {
+			dTask.status = 'complete'
+		}, 3000)
+	}
+}
+
+//поведенческие паттерны
+
+//наблюдатель - механизм подписки, позволяющий одним объектам следить и реагировать на события происходящие в др. объектках
+class Post {
+	constructor(title, subtitle) {
+		this.title = title
+		this.subtitle = subtitle
+	}
+}
+
+class Editor {
+	#observers = []
+
+	constructor(login, role = 'editor') {
+		this.login = login
+		this.role = role
+		this.posts = []
+	}
+
+	createPost(title, subtitle) {
+		const post = new Post(title, subtitle)
+
+		this.posts.push(post)
+		this.notify(post)
+	}
+
+	attach(observer) {
+		const isExist = this.#observers.includes(observer)
+
+		if (isExist) return
+
+		this.#observers.push(observer)
+		console.log('эдитор получил нового обозревателя')
+	}
+	detach(observer) {
+		const observerIndex = this.#observers.indexOf(observer)
+
+		if (observerIndex === -1) {
+			return console.log('обозреватель не был найден')
+		}
+
+		this.#observers.slice(observerIndex, 1)
+		console.log('эдитор удалил обозревателя')
+	}
+	notify(post) {
+		for (const observer of this.#observers) {
+			observer.update(this.login + 'опубликовал пост' + JSON.stringify(post))
+		}
+	}
+}
+
+class Admin52 {
+	constructor(login, role = 'admin') {
+		this.login = login
+		this.role = role
+	}
+
+	update(subject) {
+		console.log(subject)
+	}
+}
+
+const editor1 = new Editor('Stas');
+const editor2 = new Editor('German');
+const admin52 = new Admin52('NGG')
+
+editor1.attach(admin52)
+editor1.createPost('da zdravstvuet', 'saint-petersburg')

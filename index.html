@@ -5,34 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>js-course</title>
-    <script src="main.js"></script>
+
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5968/5968292.png" type="image/x-icon">
-    
+
     <style>
         body {
             font-family: Verdana, Geneva, Tahoma, sans-serif;
+            background-color:  #e2f6ff48;
+            color: rgb(0, 0, 0);
         }
-
+       
         button {
-            background-color: rgb(192, 228, 245);
+            background-color: rgb(206, 240, 255);
             border-radius: 4px;
             padding: 4px 10px;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        button:hover{
+
+        button:hover {
             transform: scale(1.1);
+            background-color: rgb(228, 246, 255);
         }
-        section{
+
+        section {
             margin-bottom: 100px;
         }
-        .shop{
+
+        .shop {
             display: flex;
             justify-content: space-between;
             margin-bottom: 30px;
-            .product{
-                background-color: rgb(238, 250, 255);
+
+            .product {
+                background-color: rgb(187, 221, 235);
                 padding: 40px;
                 border-radius: 30px;
                 display: flex;
@@ -40,9 +47,55 @@
                 align-items: center;
                 transition: all 0.3s ease;
             }
-            .product:hover{
+
+            .product:hover {
                 transform: scale(1.1);
             }
+        }
+
+        .element {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .hide {
+            opacity: 0;
+            /* display:none;*/
+        }
+
+
+        .accordion {
+            background-color: rgb(192, 228, 245);
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.2s;
+            margin-bottom: 20px;
+        }
+
+
+        .active,
+        .accordion:hover {
+            transform: scale(1.02);
+            background-color: rgb(228, 246, 255);
+        }
+
+        .panel {
+            padding: 0 18px;
+            background-color: white;
+            display: none;
+            overflow: hidden;
+        }
+
+        .panel.show {
+            display: block;
+        }
+        .closed{
+            display: none;
         }
     </style>
 </head>
@@ -50,9 +103,9 @@
 <body class="guessNum" style="max-width: 1300px; margin: auto; padding: 0px 40px;">
 
     <section>
-        <h1>
+        <h2>
             Угадай число
-        </h1>
+        </h2>
         <p>Всего 5 попыток</p>
         <button onclick=guessNum(1)>1</button>
         <button onclick=guessNum(2)>2</button>
@@ -67,7 +120,7 @@
     </section>
 
     <section>
-        <h1>Угадай загадку</h1>
+        <h2>Угадай загадку</h2>
         <p id="riddle"></p>
         <p><small>Дается 3 попытки.</small></p>
         <div>
@@ -103,6 +156,53 @@
 
     </section>
 
+    <section>
+        <button id="toggle-btn">Toggle visibility</button>
+        <div class="element">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores, eum aliquam inventore quis consectetur
+            perspiciatis aliquid ut temporibus rerum et odio suscipit qui error voluptas maxime ullam deserunt nulla
+            optio?
+        </div>
+    </section>
+
+    <section>
+        <button class="accordion">Section 1</button>
+        <div class="panel">
+            <p>Lorem ipsum...</p>
+        </div>
+
+        <button class="accordion">Section 2</button>
+        <div class="panel">
+            <p>Lorem ipsum...</p>
+        </div>
+
+        <button class="accordion">Section 3</button>
+        <div class="panel">
+            <p>Lorem ipsum...</p>
+        </div>
+
+        <button id="clicker1" data-clicked="0">click me</button>
+        <button id="clicker2" data-clicked="0">click me</button>
+    </section>
+    <section>
+        <h2>DOM API</h2>
+
+        <div>
+            <input type="text" placeholder="todo">
+            <button class="add-task">Add Task</button>
+        </div>
+
+        <ul id="todos"></ul>
+    </section>
+    <section>
+        <button id="myBtn">Toggle spoiler</button>
+
+        <div id="spoiler" class="closed">
+            <p>Some text in the Spoiler..</p>
+        </div>
+    </section>
+
 </body>
+<script src="main.js"></script>
 
 </html>
